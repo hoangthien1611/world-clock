@@ -15,7 +15,7 @@ public class CityService {
 	@Autowired
 	CityRepository cityRepository;
 	
-	public List<City> getCitiesByName(String cityName) {
+	public List<City> getCitesByName(String cityName) {
 		List<City> cities = new ArrayList<>();
 		cityRepository.findAll().forEach(cities::add);
 
@@ -33,8 +33,9 @@ public class CityService {
 			int tmp = longestCommonSubstring(cityName, stringCompared, cityName.length() - 1,
 					stringCompared.length() - 1, new int[cityName.length()][stringCompared.length()]);
 			if (tmp >= currentLength) {
-				citiesSearched[++index % maxNumberOfResult] = city;
-				lengthOfCommonSubstring[(index + 1) % maxNumberOfResult] = tmp;
+				index++;
+				citiesSearched[index % maxNumberOfResult] = city;
+				lengthOfCommonSubstring[index % maxNumberOfResult] = tmp;
 				currentLength = tmp;
 			}
 		}
@@ -42,6 +43,17 @@ public class CityService {
 		for (int i = 0; i < maxNumberOfResult - 1; i++) {
 			for (int j = 0; j < maxNumberOfResult - i - 1; j++) {
 				if (lengthOfCommonSubstring[j] < lengthOfCommonSubstring[j + 1]) {
+					int tmp = lengthOfCommonSubstring[j];
+					lengthOfCommonSubstring[j] = lengthOfCommonSubstring[j + 1];
+					lengthOfCommonSubstring[j + 1] = tmp;
+
+					City tmpCity = citiesSearched[j];
+					citiesSearched[j] = citiesSearched[j + 1];
+					citiesSearched[j + 1] = tmpCity;
+				} else if (lengthOfCommonSubstring[j] == lengthOfCommonSubstring[j + 1]
+						&& lengthOfCommonSubstring[j] != 0
+						&& Math.abs(citiesSearched[j].getCityName().length() - cityName.length()) > Math
+								.abs(citiesSearched[j + 1].getCityName().length() - cityName.length())) {
 					int tmp = lengthOfCommonSubstring[j];
 					lengthOfCommonSubstring[j] = lengthOfCommonSubstring[j + 1];
 					lengthOfCommonSubstring[j + 1] = tmp;

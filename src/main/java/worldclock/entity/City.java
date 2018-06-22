@@ -1,42 +1,29 @@
 package worldclock.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "city")
 public class City {
 
-	String kh;
 	@Id
 	@Column(name = "city_name")
-	String cityName;
-	String country;
-	int timezone;
+	private String cityName;
 
+	private String longtitude;
+	private String latitude;
+	private String country;
+	
 	public City() {
-		kh = "";
-		cityName = "";
-		country = "";
-		timezone = 0;
-	}
-
-	public City(String kh, String cityName, String country, int timezone) {
 		super();
-		this.kh = kh;
+	}
+	
+	public City(String cityName, String longtitude, String latitude, String country) {
+		super();
 		this.cityName = cityName;
+		this.longtitude = longtitude;
+		this.latitude = latitude;
 		this.country = country;
-		this.timezone = timezone;
-	}
-
-	public String getKh() {
-		return kh;
-	}
-
-	public void setKh(String kh) {
-		this.kh = kh;
 	}
 
 	public String getCityName() {
@@ -47,6 +34,22 @@ public class City {
 		this.cityName = cityName;
 	}
 
+	public String getLongtitude() {
+		return longtitude;
+	}
+
+	public void setLongtitude(String longtitude) {
+		this.longtitude = longtitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
 	public String getCountry() {
 		return country;
 	}
@@ -54,13 +57,6 @@ public class City {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
-	public int getTimezone() {
-		return timezone;
-	}
-
-	public void setTimezone(int timezone) {
-		this.timezone = timezone;
-	}
+	
 	
 }
