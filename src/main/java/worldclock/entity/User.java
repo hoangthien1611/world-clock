@@ -2,33 +2,57 @@ package worldclock.entity;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @Table(name = "Users")
 public class User {
-	
+
 	@Id
+	@GenericGenerator(name="user_id" , strategy="increment")
+	@GeneratedValue(generator="user_id")
 	@Column(name = "user_id")
 	private Integer userId;
-	
+
 	@Column(name = "session_id")
-	private Integer sessionId;
-	
-	@Column(name = "role_id")
-	private Integer roleId;
-	
+	private String sessionId;
+
 	@Column(name = "city_home")
 	private String cityHome;
+
+	@Column(name = "username")
+	private String username;
+
+	@Column(name = "password")
+	private String password;
 
 	public User() {
 		super();
 	}
 
-	public User(Integer userId, Integer sessionId, Integer roleId, String cityHome) {
+	public User(Integer userId, String sessionId, String cityHome, String username, String password) {
 		super();
 		this.userId = userId;
 		this.sessionId = sessionId;
-		this.roleId = roleId;
 		this.cityHome = cityHome;
+		this.username = username;
+		this.password = password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Integer getUserId() {
@@ -39,20 +63,12 @@ public class User {
 		this.userId = userId;
 	}
 
-	public Integer getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 
-	public void setSessionId(Integer sessionId) {
+	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
 	}
 
 	public String getCityHome() {
@@ -62,5 +78,5 @@ public class User {
 	public void setCityHome(String cityHome) {
 		this.cityHome = cityHome;
 	}
-	
+
 }
