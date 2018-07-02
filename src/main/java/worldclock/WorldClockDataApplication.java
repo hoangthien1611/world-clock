@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WorldClockDataApplication {
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(WorldClockDataApplication.class, args);
+		
 	}
 }

@@ -18,6 +18,8 @@ public class CityController {
 	
 	@RequestMapping("/getCitesByName/{cityName}")
 	public List<City> getCitesByName(@PathVariable String cityName) {
+		
 		return cityService.getCitesByName(cityName);
+		
 	}
 }

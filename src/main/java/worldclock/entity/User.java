@@ -32,6 +32,7 @@ public class User {
 
 	public User(Integer userId, String sessionId, String cityHome, String username, String password) {
 		super();
+		
 		this.userId = userId;
 		this.sessionId = sessionId;
 		this.cityHome = cityHome;
@@ -56,27 +57,39 @@ public class User {
 	}
 
 	public Integer getUserId() {
+		
 		return userId;
+		
 	}
 
 	public void setUserId(Integer userId) {
+		
 		this.userId = userId;
+	
 	}
 
 	public String getSessionId() {
+
 		return sessionId;
+
 	}
 
 	public void setSessionId(String sessionId) {
+
 		this.sessionId = sessionId;
+
 	}
 
 	public String getCityHome() {
+	
 		return cityHome;
+	
 	}
 
 	public void setCityHome(String cityHome) {
+
 		this.cityHome = cityHome;
+
 	}
 
 }

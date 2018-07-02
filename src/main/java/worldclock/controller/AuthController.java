@@ -1,6 +1,7 @@
 package worldclock.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,32 +17,47 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/signup")
-	public Message signup(@RequestBody User user) {
+	@PostMapping("/signUp")
+	public Message signUp(@RequestBody User user) {
+
 		if (userService.getUserByUsername(user.getUsername()) != null) {
+
 			return new Message(400, "Username existed!");
+
 		}
 
 		userService.addUser(user);
+
 		return new Message(200, "Sign up success!");
 	}
 
-	@PostMapping("/signin")
-	public String signin(@RequestBody User user) {
+	@PostMapping("/signIn")
+	public String signIn(@RequestBody User user) {
+
 		if (userService.checkUserExisted(user.getUsername(), user.getPassword())) {
+
 			userService.deleteGuest(user.getSessionId());
+
 			return userService.getUserByUsername(user.getUsername()).getSessionId();
+
 		}
+
 		return null;
+
 	}
 
-	@RequestMapping("/logout")
-	public String logout() {
-		return userService.addGuest();
+	@RequestMapping("/signOut/{cityName}")
+	public String signOut(@PathVariable("cityName") String homeCity) {
+
+		return userService.addGuest(homeCity);
+
 	}
-	
-	@RequestMapping("/createGuest")
-	public String addGuest() {
-		return userService.addGuest();
+
+	@RequestMapping("/addGuest/{cityName}")
+	public String addGuest(@PathVariable("cityName") String homeCity) {
+
+		return userService.addGuest(homeCity);
+
 	}
+
 }

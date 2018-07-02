@@ -19,11 +19,16 @@ public class UserController {
 	
 	@PutMapping("/changeHome")
 	public void changeHome(@RequestBody User user) {
+
 		userService.changeHome(user);
+
 	}
 	
 	@RequestMapping("/getAllUsers")
 	public List<User> getAllUsers() {
+
 		return userService.getAllUsers();
+
 	}
+
 }

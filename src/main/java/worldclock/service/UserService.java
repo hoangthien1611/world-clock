@@ -14,44 +14,66 @@ import worldclock.utils.MD5Library;
 public class UserService {
 
 	@Autowired
-	UserRepository  userRepository;
-	
+	private UserRepository  userRepository;
+
+	@Autowired
+	private BoardService boardService;
+
 	public void changeHome(User user) {
+
 		userRepository.save(user);
+
 	}
 
 	public List<User> getAllUsers() {
+
 		return (List<User>) userRepository.findAll();
+
 	}
 
 	public User getUserByUsername(String username) {
+
 		return userRepository.findByUsername(username);
+
 	}
 
 	public void addUser(User user) {
-		User user1 = userRepository.findBySessionId(user.getSessionId());
-		user1.setUsername(user.getUsername());
-		user1.setPassword(MD5Library.md5(user.getPassword()));
-		userRepository.save(user1);
-	}
-	
-	public boolean checkUserExisted(String username, String password) {
-		password = MD5Library.md5(password);
-		if (userRepository.findByUsernameAndPassword(username, password) != null)
-			return true;
-		return false;
+
+		User oldUser = userRepository.findBySessionId(user.getSessionId());
+
+		oldUser.setUsername(user.getUsername());
+		oldUser.setPassword(MD5Library.md5(user.getPassword()));
+
+		userRepository.save(oldUser);
+
 	}
 
-	public String addGuest() {
+	public boolean checkUserExisted(String username, String password) {
+
+		password = MD5Library.md5(password);
+
+		return userRepository.findByUsernameAndPassword(username, password) != null;
+
+	}
+
+	public String addGuest(String homeCity) {
+
 		String sessionId = MD5Library.md5(userRepository.findByHighestId(new PageRequest(0, 1)).get(0).getUserId() + 1 + "");
-		User user = new User(null, sessionId, "Da_Nang", null, null);
+
+		User user = new User(null, sessionId, homeCity, null, null);
+
 		userRepository.save(user);
+
+		boardService.addDefaultCitiesIntoBoard(sessionId, homeCity);
+
 		return sessionId;
+
 	}
 
 	public void deleteGuest(String sessionId) {
+
 		userRepository.deleteBySessionId(sessionId);
-		
+
 	}
 
 }
