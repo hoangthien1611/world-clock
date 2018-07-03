@@ -3,6 +3,7 @@ package worldclock.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/signUp")
+	@PutMapping("/signUp")
 	public Message signUp(@RequestBody User user) {
 
 		if (userService.getUserByUsername(user.getUsername()) != null) {
@@ -46,17 +47,17 @@ public class AuthController {
 
 	}
 
-	@RequestMapping("/signOut/{cityName}")
-	public String signOut(@PathVariable("cityName") String homeCity) {
+	@PostMapping("/signOut/{homeCityId}")
+	public String signOut(@PathVariable("homeCityId") Integer homeCityId) {
 
-		return userService.addGuest(homeCity);
+		return userService.addGuest(homeCityId);
 
 	}
 
-	@RequestMapping("/addGuest/{cityName}")
-	public String addGuest(@PathVariable("cityName") String homeCity) {
+	@PostMapping("/addGuest/{homeCityId}")
+	public String addGuest(@PathVariable("homeCityId") Integer homeCityId) {
 
-		return userService.addGuest(homeCity);
+		return userService.addGuest(homeCityId);
 
 	}
 

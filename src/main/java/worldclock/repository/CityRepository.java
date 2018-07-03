@@ -12,9 +12,10 @@ import worldclock.entity.City;
 @Repository
 public interface CityRepository extends CrudRepository<City, String> {
 	
-	@Query("select c.cityName from City c \r\n" + 
-			"where c.cityName != ?1 and country not in \r\n" + 
-			"(select ct.country from City ct where ct.cityName = ?1)\r\n" + 
+	@Query("select c.cityId from City c \r\n" + 
+			"where c.cityId != ?1 and country not in \r\n" + 
+			"(select ct.country from City ct where ct.cityId = ?1)\r\n" + 
 			"order by random()")
-	List<String> selectTwoCities(String cityName, Pageable pageble);
+	List<Integer> selectTwoCities(Integer cityId, Pageable pageble);
+	
 }

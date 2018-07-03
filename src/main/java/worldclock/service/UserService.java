@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import worldclock.entity.City;
 import worldclock.entity.User;
 import worldclock.repository.UserRepository;
 import worldclock.utils.MD5Library;
@@ -17,11 +18,15 @@ public class UserService {
 	private UserRepository  userRepository;
 
 	@Autowired
-	private BoardService boardService;
+	private CityInBoardService cityInBoardService;
 
 	public void changeHome(User user) {
 
-		userRepository.save(user);
+		User userNeedChange = userRepository.findBySessionId(user.getSessionId());
+
+		userNeedChange.setCity(user.getCity());
+
+		userRepository.save(userNeedChange);
 
 	}
 
@@ -56,15 +61,23 @@ public class UserService {
 
 	}
 
-	public String addGuest(String homeCity) {
+	public String addGuest(Integer homeCityId) {
 
-		String sessionId = MD5Library.md5(userRepository.findByHighestId(new PageRequest(0, 1)).get(0).getUserId() + 1 + "");
+		int currentHighestId = 0;
 
-		User user = new User(null, sessionId, homeCity, null, null);
+		if (userRepository.findByHighestId(new PageRequest(0, 1)).size() > 0) {
+
+			currentHighestId = userRepository.findByHighestId(new PageRequest(0, 1)).get(0).getUserId();
+
+		}
+
+		String sessionId = MD5Library.md5(currentHighestId + 1 + "");
+
+		User user = new User(null, sessionId, homeCityId, null, null);
 
 		userRepository.save(user);
 
-		boardService.addDefaultCitiesIntoBoard(sessionId, homeCity);
+		cityInBoardService.addDefaultCitiesIntoBoard(sessionId, homeCityId);
 
 		return sessionId;
 
@@ -73,6 +86,12 @@ public class UserService {
 	public void deleteGuest(String sessionId) {
 
 		userRepository.deleteBySessionId(sessionId);
+
+	}
+	
+	public boolean isLogin(String sessionId) {
+
+		return userRepository.findBySessionId(sessionId).getUsername() != null;
 
 	}
 

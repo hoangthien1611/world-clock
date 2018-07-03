@@ -17,6 +17,8 @@ public class CityService {
 	
 	public List<City> getCitesByName(String cityName) {
 		
+		cityName = cityName.replace('_', ' ');
+		
 		List<City> cities = new ArrayList<>();
 
 		cityRepository.findAll().forEach(cities::add);
@@ -39,8 +41,10 @@ public class CityService {
 
 			String stringCompared = city.getCityName().substring(indexOfCityInString).toLowerCase();
 
-			int tmp = longestCommonSubstring(cityName, stringCompared, cityName.length() - 1,
-					stringCompared.length() - 1, new int[cityName.length()][stringCompared.length()]);
+			//int tmp = longestCommonSubstring(cityName, stringCompared, cityName.length() - 1,
+			//		stringCompared.length() - 1, new int[cityName.length()][stringCompared.length()]);
+			
+			int tmp = longestCommonSubstringTabutation(cityName, stringCompared);
 			
 			if (tmp >= currentLength) {
 
@@ -150,6 +154,54 @@ public class CityService {
 
 		return memoization[lengthOfString1][lengthOfString2];
 
+	}
+	
+	int longestCommonSubstringTabutation(String string1, String string2) {
+		
+		int[][] memoization = new int[string1.length()][string2.length()];
+		
+		int lengthOfString1 = string1.length();
+		int lengthOfString2 = string2.length();
+		
+		for (int i = 0; i < lengthOfString1; i++) {
+			
+			for (int j = 0; j < lengthOfString2; j++) {
+				
+				if (string1.charAt(i) == string2.charAt(j)) {
+					
+					if (i != 0 && j !=0 ) {
+						
+						memoization[i][j] = 1 + memoization[i - 1][j - 1];
+						
+					} else {
+						
+						memoization[i][j] = 1;
+						
+					}
+					
+					
+				} else {
+					
+					if (i != 0) {	
+						
+						memoization[i][j] = memoization[i - 1][j];
+					
+					}
+					
+					if (j != 0 && memoization[i][j] < memoization[i][j - 1]) {
+						
+						memoization[i][j] = memoization[i][j - 1];
+					
+					}
+				
+				}
+					
+			}
+			
+		}
+		
+		return memoization[lengthOfString1 - 1][lengthOfString2 - 1];
+		
 	}
 
 }

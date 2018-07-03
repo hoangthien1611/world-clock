@@ -17,43 +17,55 @@ public class User {
 	@Column(name = "session_id")
 	private String sessionId;
 
-	@Column(name = "city_home")
-	private String cityHome;
-
 	@Column(name = "username")
 	private String username;
 
 	@Column(name = "password")
 	private String password;
 
+	@ManyToOne
+	@JoinColumn(name = "city_home_id")
+	private City city;
+
 	public User() {
+
 		super();
+
 	}
 
-	public User(Integer userId, String sessionId, String cityHome, String username, String password) {
+	public User(Integer userId, String sessionId, Integer cityHomeId, String username, String password) {
 		super();
 		
 		this.userId = userId;
 		this.sessionId = sessionId;
-		this.cityHome = cityHome;
+		this.city = new City(cityHomeId, "", "", "", "", null);
 		this.username = username;
 		this.password = password;
+
 	}
 
 	public String getUsername() {
+
 		return username;
+
 	}
 
 	public void setUsername(String username) {
+
 		this.username = username;
+
 	}
 
 	public String getPassword() {
+
 		return password;
+
 	}
 
 	public void setPassword(String password) {
+
 		this.password = password;
+
 	}
 
 	public Integer getUserId() {
@@ -80,16 +92,16 @@ public class User {
 
 	}
 
-	public String getCityHome() {
-	
-		return cityHome;
-	
+	public City getCity() {
+		
+		return city;
+		
 	}
 
-	public void setCityHome(String cityHome) {
-
-		this.cityHome = cityHome;
-
+	public void setCity(City city) {
+		
+		this.city = city;
+		
 	}
 
 }

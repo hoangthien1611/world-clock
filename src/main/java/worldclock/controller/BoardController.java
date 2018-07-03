@@ -11,29 +11,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import worldclock.entity.Board;
-import worldclock.service.BoardService;
+import worldclock.entity.CityInBoard;
+import worldclock.service.CityInBoardService;
 
 @RestController
 public class BoardController {
 
 	@Autowired
-	BoardService boardService;
+	CityInBoardService boardService;
 
 	@PostMapping("/addCityIntoBoard")
-	public void addCityIntoBoard(@RequestBody Board board) {
+	public void addCityIntoBoard(@RequestBody CityInBoard board) {
 		
 		boardService.addCityIntoBoard(board);
 	}
 
 	@PutMapping("/swapCitiesInBoard")
-	public void swapCitiesInBoard(@RequestBody Board[] board) {
+	public void swapCitiesInBoard(@RequestBody CityInBoard[] board) {
 		
 		boardService.swapCitiesInBoard(board);
 	}
 
 	@GetMapping("/getBoard/{sessionId}")
-	public List<Board> getBoard(@PathVariable String sessionId) {
+	public List<CityInBoard> getBoard(@PathVariable String sessionId) {
 		
 		return boardService.getBoard(sessionId);
 	}

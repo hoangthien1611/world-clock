@@ -40,7 +40,7 @@ public class AuthControllerTest {
 	@Test
 	public void testAddGuest() throws Exception {
 
-		Mockito.when(service.addGuest("Da_Nang")).thenReturn("8f14e45fceea167a5a36dedd4bea2543");
+		Mockito.when(service.addGuest(1)).thenReturn("8f14e45fceea167a5a36dedd4bea2543");
 
 		mockMvc.perform(get("/addGuest"))
 				.andExpect(status().isOk())

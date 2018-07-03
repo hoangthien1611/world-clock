@@ -7,6 +7,9 @@ import javax.persistence.*;
 public class City {
 
 	@Id
+	@Column(name = "city_id")
+	private Integer cityId;
+	
 	@Column(name = "city_name")
 	private String cityName;
 
@@ -14,22 +17,28 @@ public class City {
 	private String latitude;
 	private String country;
 	
+	private Integer timezone;
+	
 	public City() {
 		
 		super();
 		
 	}
-	
-	public City(String cityName, String longtitude, String latitude, String country) {
-		
+
+	public City(Integer cityId, String cityName, String longtitude, String latitude, String country, Integer timezone) {
+
 		super();
-		
+
+		this.cityId = cityId;
 		this.cityName = cityName;
 		this.longtitude = longtitude;
 		this.latitude = latitude;
 		this.country = country;
-		
+		this.timezone = timezone;
+
 	}
+
+
 
 	public String getCityName() {
 		
@@ -78,6 +87,29 @@ public class City {
 		this.country = country;
 		
 	}
-	
+
+	public Integer getCityId() {
+
+		return cityId;
+
+	}
+
+	public void setCityId(Integer cityId) {
+
+		this.cityId = cityId;
+
+	}
+
+	public Integer getTimezone() {
+
+		return timezone;
+
+	}
+
+	public void setTimezone(Integer timezone) {
+
+		this.timezone = timezone;
+
+	}
 	
 }
