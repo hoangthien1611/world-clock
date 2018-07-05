@@ -20,18 +20,18 @@ public class CityInBoardService {
 
 	@Autowired
 	CityRepository cityRepository;
-	
+
 	@Autowired
 	UserService userService;
 
 	public void addCityIntoBoard(CityInBoard city) {
 
 		int maxOrdinalNumber = cityInBoardRepository.findBySessionId(city.getSessionId()).size();
-		
+
 		if (!userService.isLogin(city.getSessionId()) && maxOrdinalNumber >= 5) {
-			
+
 			return;
-			
+
 		}
 
 		city.setOrdinalNumber(maxOrdinalNumber + 1);
@@ -43,11 +43,11 @@ public class CityInBoardService {
 	public void addDefaultCitiesIntoBoard(String sessionId, Integer cityId) {
 
 		CityInBoard city = new CityInBoard(null, 1, sessionId, cityId);
-		
+
 		cityInBoardRepository.save(city);
-		
+
 		List<Integer> cityIds = cityRepository.selectTwoCities(cityId, new PageRequest(0, 2));
-		
+
 		cityInBoardRepository.save(new CityInBoard(null, 2, sessionId, cityIds.get(0)));
 		cityInBoardRepository.save(new CityInBoard(null, 3, sessionId, cityIds.get(1)));
 
@@ -55,18 +55,40 @@ public class CityInBoardService {
 
 	public void swapCitiesInBoard(CityInBoard[] board) {
 
-		board[0] = cityInBoardRepository.findBySessionIdAndOrdinalNumber(board[0].getSessionId(),
-				board[0].getOrdinalNumber());
-		board[1] = cityInBoardRepository.findBySessionIdAndOrdinalNumber(board[1].getSessionId(),
-				board[1].getOrdinalNumber());
+		String sessionId = board[0].getSessionId();
 
-		int tmp = board[0].getOrdinalNumber();
+		Integer currentPosition = board[0].getOrdinalNumber();
+		Integer nextPosition = board[1].getOrdinalNumber();
 
-		board[0].setOrdinalNumber(board[1].getOrdinalNumber());
-		board[1].setOrdinalNumber(tmp);
+		List<CityInBoard> cities = (ArrayList<CityInBoard>) cityInBoardRepository.findBySessionId(sessionId);
+		
+		CityInBoard currentCity = null;
 
-		cityInBoardRepository.save(board[0]);
-		cityInBoardRepository.save(board[1]);
+		for (CityInBoard city : cities) {
+
+			Integer tmpPosition = city.getOrdinalNumber();
+
+			if (currentPosition < nextPosition && tmpPosition > currentPosition && tmpPosition <= nextPosition) {
+
+				city.setOrdinalNumber(tmpPosition - 1);
+
+				cityInBoardRepository.save(city);
+
+			} else if (currentPosition > nextPosition && tmpPosition < currentPosition && tmpPosition >= nextPosition) {
+
+				city.setOrdinalNumber(tmpPosition + 1);
+
+				cityInBoardRepository.save(city);
+
+			} else if (currentPosition == tmpPosition) {
+				currentCity = city;
+			}
+
+		}
+
+		currentCity.setOrdinalNumber(nextPosition);
+
+		cityInBoardRepository.save(currentCity);
 
 	}
 
@@ -77,15 +99,15 @@ public class CityInBoardService {
 		quickSort(cities, 0, cities.size() - 1);
 
 		List<CityInBoardDetail> citiesInBoard = new ArrayList<>();
-		
+
 		Integer homeCityId = userService.getHomeCityId(sessionId);
-		
-		for (CityInBoard city: cities) {
-			
+
+		for (CityInBoard city : cities) {
+
 			boolean isHomeCity = city.getCity().getCityId() == homeCityId;
-			
+
 			citiesInBoard.add(new CityInBoardDetail(city, isHomeCity));
-			
+
 		}
 
 		return citiesInBoard;
