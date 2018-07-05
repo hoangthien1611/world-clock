@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import worldclock.entity.CityInBoard;
+import worldclock.model.CityInBoardDetail;
 import worldclock.repository.CityInBoardRepository;
 import worldclock.repository.CityRepository;
 
@@ -69,14 +70,25 @@ public class CityInBoardService {
 
 	}
 
-	public List<CityInBoard> getBoard(String sessionId) {
+	public List<CityInBoardDetail> getBoard(String sessionId) {
 
 		List<CityInBoard> cities = (ArrayList<CityInBoard>) cityInBoardRepository.findBySessionId(sessionId);
 
 		quickSort(cities, 0, cities.size() - 1);
 
-		return cities;
+		List<CityInBoardDetail> citiesInBoard = new ArrayList<>();
+		
+		Integer homeCityId = userService.getHomeCityId(sessionId);
+		
+		for (CityInBoard city: cities) {
+			
+			boolean isHomeCity = city.getCity().getCityId() == homeCityId;
+			
+			citiesInBoard.add(new CityInBoardDetail(city, isHomeCity));
+			
+		}
 
+		return citiesInBoard;
 	}
 
 	public static void quickSort(List<CityInBoard> cities, int left, int right) {

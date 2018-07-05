@@ -95,4 +95,10 @@ public class UserService {
 
 	}
 
+	public Integer getHomeCityId(String sessionId) {
+
+		return userRepository.findBySessionId(sessionId).getCity().getCityId();
+
+	}
+
 }
