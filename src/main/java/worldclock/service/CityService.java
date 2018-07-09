@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import worldclock.entity.City;
@@ -206,7 +207,7 @@ public class CityService {
 
 	public List<City> searchCityWithExactName(String key) {
 
-		return cityRepository.searchCityWithExactName("%" + key.toLowerCase().replace('_', ' ') + "%");
+		return cityRepository.searchCityWithExactName("%" + key.toLowerCase().replace('_', ' ') + "%", new PageRequest(0, 10));
 		
 	}
 }

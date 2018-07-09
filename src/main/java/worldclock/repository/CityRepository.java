@@ -19,6 +19,6 @@ public interface CityRepository extends CrudRepository<City, String> {
 	List<Integer> selectTwoCities(Integer cityId, Pageable pageble);
 	
 	@Query("select c from City c where LOWER(c.cityName) like ?1")
-	List<City> searchCityWithExactName(String key);
+	List<City> searchCityWithExactName(String key, Pageable pageble);
 	
 }
