@@ -204,4 +204,9 @@ public class CityService {
 		
 	}
 
+	public List<City> searchCityWithExactName(String key) {
+
+		return cityRepository.searchCityWithExactName("%" + key.toLowerCase().replace('_', ' ') + "%");
+		
+	}
 }

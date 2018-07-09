@@ -18,4 +18,7 @@ public interface CityRepository extends CrudRepository<City, String> {
 			"order by random()")
 	List<Integer> selectTwoCities(Integer cityId, Pageable pageble);
 	
+	@Query("select c from City c where LOWER(c.cityName) like ?1")
+	List<City> searchCityWithExactName(String key);
+	
 }

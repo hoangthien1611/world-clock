@@ -18,10 +18,17 @@ public class CityController {
 	@Autowired
 	private CityService cityService;
 	
-	@RequestMapping("/getCitesByName/{cityName}")
+	@RequestMapping("/getCitiesByName/{cityName}")
 	public List<City> getCitesByName(@PathVariable String cityName) {
 		
 		return cityService.getCitesByName(cityName);
+		
+	}
+	
+	@RequestMapping("/getCities/{cityName}")
+	public List<City> searchCityWithExactName(@PathVariable String cityName) {
+		
+		return cityService.searchCityWithExactName(cityName);
 		
 	}
 }
