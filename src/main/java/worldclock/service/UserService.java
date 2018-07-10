@@ -20,13 +20,27 @@ public class UserService {
 	@Autowired
 	private CityInBoardService cityInBoardService;
 
-	public void changeHome(User user) {
+	public String changeHome(User user) {
 
 		User userNeedChange = userRepository.findBySessionId(user.getSessionId());
+
+		if (userNeedChange == null) {
+
+			return "Error! User is not existed!";
+
+		}
+
+		if (!cityInBoardService.isCityExistInBoard(user.getSessionId(), user.getCity())) {
+
+			return "Error! This cityId is not existed in board for this user!";
+
+		}
 
 		userNeedChange.setCity(user.getCity());
 
 		userRepository.save(userNeedChange);
+
+		return "Update home city successful!";
 
 	}
 

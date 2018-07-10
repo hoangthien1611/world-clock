@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import worldclock.entity.City;
 import worldclock.entity.CityInBoard;
 import worldclock.model.CityInBoardDetail;
 import worldclock.repository.CityInBoardRepository;
@@ -171,6 +172,12 @@ public class CityInBoardService {
 			}
 
 		}
+
+	}
+	
+	public boolean isCityExistInBoard(String sessionId, City city) {
+
+		return cityInBoardRepository.findBySessionIdAndCity(sessionId, city) != null;
 
 	}
 
