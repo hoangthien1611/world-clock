@@ -56,14 +56,34 @@ public class UserService {
 
 	}
 
-	public void addUser(User user) {
+	public String addUser(User user) {
 
 		User oldUser = userRepository.findBySessionId(user.getSessionId());
+
+		if (oldUser == null) {
+
+			return "Error! SessionId does not exist!";
+
+		}
+
+		if (oldUser.getUsername() != null) {
+
+			return "Error! User already logged in!";
+
+		}
+
+		if (userRepository.findByUsername(user.getUsername()) != null) {
+
+			return "Error! Username existed!";
+
+		}
 
 		oldUser.setUsername(user.getUsername());
 		oldUser.setPassword(MD5Library.md5(user.getPassword()));
 
 		userRepository.save(oldUser);
+		
+		return "Sign up success!";
 
 	}
 
@@ -99,7 +119,11 @@ public class UserService {
 
 	public void deleteGuest(String sessionId) {
 
-		userRepository.deleteBySessionId(sessionId);
+		if (userRepository.findBySessionId(sessionId).getUsername() == null) {
+
+			userRepository.deleteBySessionId(sessionId);
+
+		}
 
 	}
 	

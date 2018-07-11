@@ -1,5 +1,8 @@
 package worldclock.controller;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,15 +25,30 @@ public class AuthController {
 	@PutMapping("/signUp")
 	public Message signUp(@RequestBody User user) {
 
-		if (userService.getUserByUsername(user.getUsername()) != null) {
+		if ("".equals(user.getUsername())) {
 
-			return new Message(400, "Username existed!");
+			return new Message(400, "Error! Username can not be empty!");
 
 		}
 
-		userService.addUser(user);
+		String regex = "^[a-zA-Z0-9_.-@]*$";
 
-		return new Message(200, "Sign up success!");
+		Pattern pattern = Pattern.compile(regex);
+
+		Matcher matcher = pattern.matcher(user.getUsername());
+
+		if (!matcher.matches()) {
+
+			return new Message(400, "Error! Username is not correct format!");
+
+		}
+
+		String content = userService.addUser(user);
+
+		int code = content.contains("Error") ? 400 : 200;
+
+		return new Message(code, content);
+
 	}
 
 	@PostMapping("/signIn")
