@@ -1,9 +1,14 @@
 package worldclock.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +40,57 @@ public class UserController {
 	public List<User> getAllUsers() {
 
 		return userService.getAllUsers();
+
+	}
+
+	@GetMapping("/checkUsername/{email:.+}")
+	public boolean checkUsername(@PathVariable("email") String email) {
+
+		return userService.isUsernameRegistered(email);
+
+	}
+
+	@PutMapping("/changePassword")
+	public Message changePassword(@RequestBody User user) {
+
+		if (userService.isUsernameRegistered(user.getUsername())) {
+
+			userService.deleteGuest(user.getSessionId());
+
+			String sessionId = userService.updatePassword(user);
+
+			if (sessionId != null) {
+
+				return new Message(200, sessionId);
+
+			}
+
+		}
+
+		return new Message(400, "Can not update password!");
+
+	}
+
+	@GetMapping("/forgotPassword/{email:.+}")
+	public Message sendMailWhenForgotPassword(@PathVariable("email") String mail) {
+
+		if (userService.isUsernameRegistered(mail)) {
+
+			try {
+
+				userService.sendMail(mail);
+
+				return new Message(200, "Check your mail to get the new password!");
+
+			} catch (MessagingException | UnsupportedEncodingException e) {
+
+				return new Message(400, "Can not send an email! Please try again!");
+
+			}
+
+		}
+
+		return new Message(400, "Email is not registered!");
 
 	}
 

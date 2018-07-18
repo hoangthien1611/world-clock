@@ -1,6 +1,10 @@
 package worldclock.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Random;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,13 +24,22 @@ public class UserService {
 	@Autowired
 	private CityInBoardService cityInBoardService;
 
+	@Autowired
+	private SmtpMailSenderService mailSenderService;
+
 	public String changeHome(User user) {
+
+		if (user.getSessionId() == null) {
+
+			return "Error! SessionId is missed!";
+
+		}
 
 		User userNeedChange = userRepository.findBySessionId(user.getSessionId());
 
 		if (userNeedChange == null) {
 
-			return "Error! User is not existed!";
+			return "Error! User is not found!";
 
 		}
 
@@ -58,11 +71,17 @@ public class UserService {
 
 	public String addUser(User user) {
 
+		if (user.getSessionId() == null) {
+
+			return "Error! SessionId is missed!";
+
+		}
+
 		User oldUser = userRepository.findBySessionId(user.getSessionId());
 
 		if (oldUser == null) {
 
-			return "Error! SessionId does not exist!";
+			return "Error! User is not found!";
 
 		}
 
@@ -136,6 +155,54 @@ public class UserService {
 	public Integer getHomeCityId(String sessionId) {
 
 		return userRepository.findBySessionId(sessionId).getCity().getCityId();
+
+	}
+
+	public boolean isUsernameRegistered(String username) {
+
+		return userRepository.findByUsername(username) != null;
+
+	}
+
+	public String updatePassword(User user) {
+
+		User userNeedChange = userRepository.findByUsername(user.getUsername());
+
+		if (userNeedChange != null) {
+
+			userNeedChange.setPassword(MD5Library.md5(user.getPassword()));
+
+			userRepository.save(userNeedChange);
+
+			return userNeedChange.getSessionId();
+
+		}
+
+		return null;
+
+	}
+
+	public void sendMail(String mail) throws MessagingException, UnsupportedEncodingException {
+
+		User userNeedUpdatePassword = userRepository.findByUsername(mail);
+
+		String password = createNewPassword();
+		String subject = "Your new password";
+		String message = "Here is your new password for login on https://ces-world-clock-2018.herokuapp.com: " + password;
+
+		userNeedUpdatePassword.setPassword(MD5Library.md5(password));
+
+		userRepository.save(userNeedUpdatePassword);
+
+		mailSenderService.send(mail, subject, message);
+
+	}
+
+	private String createNewPassword() {
+
+		Random random = new Random();
+
+		return "wc" + random.nextInt(10) + random.nextInt(10) + random.nextInt(10) + random.nextInt(10);
 
 	}
 
